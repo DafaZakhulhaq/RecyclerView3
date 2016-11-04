@@ -10,18 +10,18 @@ public class Hotel implements Serializable {
 
     public String judul;
     public String deskripsi;
-    public String foto;
-    public String lokasi;
     public String detail;
+    public String lokasi;
+    public String foto;
 
 
-    public Hotel(String judul, String deskripsi, String foto, String lokasi, String detail) {
+    public Hotel(String judul, String deskripsi, String detail, String lokasi, String foto) {
 
         this.judul = judul;
         this.deskripsi = deskripsi;
-        this.foto = foto;
-        this.lokasi = lokasi;
         this.detail = detail;
+        this.lokasi = lokasi;
+        this.foto = foto;
 
     }
 
