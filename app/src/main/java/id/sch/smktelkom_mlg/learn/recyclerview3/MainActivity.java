@@ -1,8 +1,9 @@
 package id.sch.smktelkom_mlg.learn.recyclerview3;
 
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,9 +20,10 @@ import java.util.ArrayList;
 import id.sch.smktelkom_mlg.learn.recyclerview3.adapter.HotelAdapter;
 import id.sch.smktelkom_mlg.learn.recyclerview3.model.Hotel;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HotelAdapter.IHotelAdapter {
 
 
+    public static final String HOTEL = "hotel";
     ArrayList<Hotel> mlist = new ArrayList<>();
     HotelAdapter madapter;
 
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        madapter = new HotelAdapter(mlist);
+        madapter = new HotelAdapter(this, mlist);
         recyclerView.setAdapter(madapter);
 
         filldata();
@@ -58,19 +60,25 @@ public class MainActivity extends AppCompatActivity {
         Resources resources = getResources();
         String[] arjudul = resources.getStringArray(R.array.places);
         String[] ardeskripsi = resources.getStringArray(R.array.place_desc);
+        String[] ardetail = resources.getStringArray(R.array.place_details);
+        String[] arlokasi = resources.getStringArray(R.array.place_locations);
         TypedArray a = resources.obtainTypedArray(R.array.places_picture);
-        Drawable[] arfoto = new Drawable[a.length()];
+        String[] arfoto = new String[a.length()];
 
         for (int i = 0; i < arfoto.length; i++) {
 
-            arfoto[i] = a.getDrawable(i);
+            int id = a.getResourceId(i, 0);
+            arfoto[i] = ContentResolver.SCHEME_ANDROID_RESOURCE + "://"
+                    + resources.getResourcePackageName(id) + '/'
+                    + resources.getResourceTypeName(id) + '/'
+                    + resources.getResourceEntryName(id);
 
         }
         a.recycle();
 
 
         for (int i = 0; i < arjudul.length; i++) {
-            mlist.add(new Hotel(arjudul[i], ardeskripsi[i], arfoto[i]));
+            mlist.add(new Hotel(arjudul[i], ardeskripsi[i], arfoto[i], arlokasi[i], ardetail[i]));
 
         }
         madapter.notifyDataSetChanged();
@@ -98,5 +106,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void doClick(int pos) {
+
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra(HOTEL, mlist.get(pos));
+        startActivity(intent);
+
     }
 }

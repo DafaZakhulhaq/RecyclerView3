@@ -1,5 +1,7 @@
 package id.sch.smktelkom_mlg.learn.recyclerview3.adapter;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,10 +21,13 @@ import id.sch.smktelkom_mlg.learn.recyclerview3.model.Hotel;
 public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> {
 
     ArrayList<Hotel> hotellist;
+    IHotelAdapter mIHotelAdapter;
 
-    public HotelAdapter(ArrayList<Hotel> hotellist) {
+
+    public HotelAdapter(Context context, ArrayList<Hotel> hotellist) {
 
         this.hotellist = hotellist;
+        mIHotelAdapter = (IHotelAdapter) context;
 
     }
 
@@ -41,7 +46,7 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
         Hotel hotel = hotellist.get(position);
         holder.tvjudul.setText(hotel.judul);
         holder.tvdeskripsi.setText(hotel.deskripsi);
-        holder.ivfoto.setImageDrawable(hotel.foto);
+        holder.ivfoto.setImageURI(Uri.parse(hotel.foto));
 
     }
 
@@ -52,6 +57,12 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
             return hotellist.size();
         }
         return 0;
+    }
+
+    public interface IHotelAdapter {
+
+        void doClick(int pos);
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -68,6 +79,17 @@ public class HotelAdapter extends RecyclerView.Adapter<HotelAdapter.ViewHolder> 
             tvjudul = (TextView) itemView.findViewById(R.id.textviewjudul);
             tvdeskripsi = (TextView) itemView.findViewById(R.id.textviewdeskripsi);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    mIHotelAdapter.doClick(getAdapterPosition());
+
+                }
+            });
+
+
         }
+
     }
 }
