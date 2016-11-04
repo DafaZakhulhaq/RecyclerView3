@@ -21,11 +21,12 @@ import id.sch.smktelkom_mlg.learn.recyclerview3.model.Hotel;
 
 public class MainActivity extends AppCompatActivity implements HotelAdapter.IHotelAdapter {
 
-
     public static final String HOTEL = "hotel";
     public static final int REQUEST_CODE_ADD = 88;
+    public static final int REQUEST_CODE_EDIT = 99;
     ArrayList<Hotel> mlist = new ArrayList<>();
     HotelAdapter madapter;
+    int itemPos;
 
 
     @Override
@@ -63,6 +64,14 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
 
             Hotel hotel = (Hotel) data.getSerializableExtra(HOTEL);
             mlist.add(hotel);
+            madapter.notifyDataSetChanged();
+
+
+        } else if (requestCode == REQUEST_CODE_EDIT && resultCode == RESULT_OK) {
+
+            Hotel hotel = (Hotel) data.getSerializableExtra(HOTEL);
+            mlist.remove(itemPos);
+            mlist.add(itemPos, hotel);
             madapter.notifyDataSetChanged();
 
 
@@ -138,6 +147,31 @@ public class MainActivity extends AppCompatActivity implements HotelAdapter.IHot
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra(HOTEL, mlist.get(pos));
         startActivity(intent);
+
+    }
+
+    @Override
+    public void doEdit(int pos) {
+
+        itemPos = pos;
+        Intent intent = new Intent(this, InputActivity.class);
+        intent.putExtra(HOTEL, mlist.get(pos));
+        startActivityForResult(intent, REQUEST_CODE_EDIT);
+
+    }
+
+    @Override
+    public void doDelete(int pos) {
+
+    }
+
+    @Override
+    public void doFav(int pos) {
+
+    }
+
+    @Override
+    public void doShare(int pos) {
 
     }
 
